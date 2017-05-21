@@ -1,6 +1,4 @@
 <?php
-echo "lonny.p@gmail.com";
-die;
 
 /**
  * Laravel - A PHP Framework For Web Artisans
