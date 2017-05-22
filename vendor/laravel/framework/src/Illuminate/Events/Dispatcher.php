@@ -345,7 +345,7 @@ class Dispatcher implements DispatcherContract
             if ($wildcard) {
                 return $listener($event, $payload);
             } else {
-                return $listener(...array_values($payload));
+                return $listener(array_values($payload));
             }
         };
     }
