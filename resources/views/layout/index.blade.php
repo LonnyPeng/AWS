@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="<?php echo LANG_LOCALE; ?>">
+<html lang="zh-CN">
 <head>
     <meta charset="utf-8">
     <title>Laravel</title>
