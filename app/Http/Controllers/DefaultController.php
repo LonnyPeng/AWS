@@ -16,7 +16,7 @@ class DefaultController extends Controller
 
     	// $result = $models->getTable('t_member_perm', '*', array());
 
-    	print_r('lonny');die;
+    	// print_r('lonny');die;
     	return view('default.index');
     }
 }
