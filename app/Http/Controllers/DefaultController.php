@@ -10,13 +10,12 @@ class DefaultController extends Controller
 {
     public function index()
     {
-    	// $models = new MemberModels();
+    	$models = new MemberModels();
 
     	$email =trim(Input::get('email'));
 
-    	// $result = $models->getTable('t_member_perm', '*', array());
+    	$result = $models->getTable('t_member_perm', 'member_perm_name', array());
 
-    	// print_r('lonny');die;
-    	return view('default.index');
+    	return view('default.index', array('data' => $result));
     }
 }

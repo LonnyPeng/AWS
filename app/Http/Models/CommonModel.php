@@ -14,7 +14,7 @@ class CommonModel extends Model
 {
 	protected $initSql = array("setJoin", "setWhere", "setGroupBy", "setOrderBy", "setLimit");
 
-	protected function setTable($table = array())
+	public function setTable($table = array())
 	{
 		if (!$table) {
 			return false;
@@ -29,7 +29,7 @@ class CommonModel extends Model
 		return $table;
 	}
 
-	protected function setFile($file = array())
+	public function setFile($file = array())
 	{
 		if (!$file) {
 			return " *";
@@ -44,7 +44,7 @@ class CommonModel extends Model
 		return $file;
 	}
 
-	protected function setSql($sql, $initSql = array())
+	public function setSql($sql, $initSql = array())
 	{
 		if (!$sql) {
 			return false;
@@ -59,7 +59,7 @@ class CommonModel extends Model
 		return $sql;
 	}
 
-	protected function setJoin($sql = "", $join = array())
+	public function setJoin($sql = "", $join = array())
 	{
 	    if (!$sql) {
 	        return false;
@@ -74,7 +74,7 @@ class CommonModel extends Model
 	    return $sql;
 	}
 
-	protected function setWhere($sql = "", $where = array())
+	public function setWhere($sql = "", $where = array())
 	{
 	    if (!$sql) {
 	        return false;
@@ -89,7 +89,7 @@ class CommonModel extends Model
 	    return $sql;
 	}
 
-	protected function setGroupBy($sql = "", $groupBy = array())
+	public function setGroupBy($sql = "", $groupBy = array())
 	{
 		if (!$sql) {
 			return false;
@@ -104,7 +104,7 @@ class CommonModel extends Model
 		return $sql;
 	}
 
-	protected function setOrderBy($sql = "", $orderBy = array())
+	public function setOrderBy($sql = "", $orderBy = array())
 	{
 	    if (!$sql) {
 	        return false;
@@ -119,7 +119,7 @@ class CommonModel extends Model
 	    return $sql;
 	}
 
-	protected function setLimit($sql = "", $limit = array())
+	public function setLimit($sql = "", $limit = array())
 	{
 	    if (!$sql) {
 	        return false;
