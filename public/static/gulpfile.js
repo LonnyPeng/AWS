@@ -43,7 +43,7 @@ var plumberOptions = {
     errorHandler: notify.onError("Error: <%= error.message %>")
 };
 var isPartial = function (file) {
-    return /_/.test(file.relative);
+    return /^_.*$/.test(file.relative);
 };
 
 var cssInput = 'src/css/**/*.scss';
