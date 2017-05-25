@@ -13,6 +13,7 @@
 
 @section('content')
 	<h1>Hello World</h1>
+	<span><i class="fa fa-file-text"></i></span>
 @endsection
 
 @section('script')
