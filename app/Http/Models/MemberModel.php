@@ -19,4 +19,23 @@ class MemberModel extends CommonModel
 
 	    return $result;
 	}
+
+	public function getMemberInfo($mail = '')
+	{
+		$mail = trim($mail);
+		if (!isMail($mail)) {
+			return false;
+		}
+
+		$sql = "SELECT member_email, member_password 
+				FROM t_member 
+				WHERE member_email = ?";
+		$result = DB::select($sql, array($mail));
+		$result = array_map("toArray", $result);
+		if ($result) {
+			$result = reset($result);
+		}
+
+		return $result;
+	}
 }

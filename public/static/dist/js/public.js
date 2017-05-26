@@ -1,0 +1,2 @@
+$.warning=function(msg,delay){var box=document.createElement("div");box.style.display="inline-block",box.style.position="fixed",box.style.top="0px",box.style.right="0px",box.style.padding="10px 40px 10px 20px",box.style.border="0px 0px 1px 1px",box.style.borderColor="#e0be90",box.style.borderRadius="0px 0px 0px 10px",box.style.backgroundColor="#ffecef",box.innerHTML=msg,document.body.appendChild(box),setTimeout(function(){$(box).remove()},2e3)};
+//# sourceMappingURL=../maps/js/public.js.map

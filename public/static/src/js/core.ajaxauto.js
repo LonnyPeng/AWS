@@ -13,7 +13,7 @@ $.ajaxSetup({
  * @param xHTTPrequest jqXHR
  */
 var currentRequests = {};
-$.ajaxPrefilter(function(options, originalOptions, jqXHR) {
+$.ajaxPrefilter(function (options, originalOptions, jqXHR) {
     if (options.abortOnRetry) {
         if (currentRequests[options.url]) {
             currentRequests[options.url].abort();
@@ -29,7 +29,7 @@ $.ajaxPrefilter(function(options, originalOptions, jqXHR) {
  * @param json origOptions
  * @param xHTTPrequest jqXHR
  */
-$.ajaxTransport("json", function(options, origOptions, jqXHR) {
+$.ajaxTransport("json", function (options, origOptions, jqXHR) {
     if (!origOptions.files) {
         return;
     }
@@ -40,9 +40,8 @@ $.ajaxTransport("json", function(options, origOptions, jqXHR) {
             name = "iframe-" + $.now(),
             files = $(options.files).filter(":file:enabled"),
             markers = null;
-
-        var cleanUp = function() {
-            markers.replaceWith(function(idx) {
+        var cleanUp = function () {
+            markers.replaceWith(function (idx) {
                 return files.get(idx);
             });
             form.remove();
@@ -57,7 +56,7 @@ $.ajaxTransport("json", function(options, origOptions, jqXHR) {
             if (typeof(origOptions.data) === "string" && origOptions.data.length > 0) {
                 alert('Invalid data format');
             }
-            $.each(origOptions.data || {}, function(name, value) {
+            $.each(origOptions.data || {}, function (name, value) {
                 if ($.isPlainObject(value)) {
                     name = value.name;
                     value = value.value;
@@ -66,16 +65,16 @@ $.ajaxTransport("json", function(options, origOptions, jqXHR) {
             });
             $("<input type='hidden' value='XMLHttpRequest' name='X-Requested-With'>").appendTo(form);
 
-            markers = files.after(function(idx) {
+            markers = files.after(function (idx) {
                 return $(this).clone().prop("disabled", true);
             }).next();
             files.appendTo(form);
 
             return {
-                send: function(headers, completeCallback) {
+                send: function (headers, completeCallback) {
                     iframe = $("<iframe src='javascript:false;' name='" + name + "' style='display:none'></iframe>");
-                    iframe.bind("load", function() {
-                        iframe.unbind("load").bind("load", function() {
+                    iframe.bind("load", function () {
+                        iframe.unbind("load").bind("load", function () {
                             var doc = this.contentWindow ? this.contentWindow.document : (this.contentDocument ? this.contentDocument : this.document),
                                 root = doc.documentElement ? doc.documentElement : doc.body,
                                 textarea = root.getElementsByTagName("textarea")[0],
@@ -90,7 +89,7 @@ $.ajaxTransport("json", function(options, origOptions, jqXHR) {
                     });
                     $("body").append(form, iframe);
                 },
-                abort: function() {
+                abort: function () {
                     if (iframe !== null) {
                         iframe.unbind("load").attr("src", "javascript:false;");
                         cleanUp();
@@ -115,16 +114,16 @@ $.ajaxTransport("json", function(options, origOptions, jqXHR) {
         //for (var name in filterFiles) {
         //    fd.append(name, filterFiles[name]);
         //}
-        $.each(origOptions.data, function(i, field) {
+        $.each(origOptions.data, function (i, field) {
             fd.append(field.name, field.value);
         });
         //$("<input type='hidden' value='XMLHttpRequest' name='X-Requested-With'>").appendTo(form);
         fd.append('X-Requested-With', 'XMLHttpRequest');
 
         return {
-            send: function(headers, completeCallback) {
+            send: function (headers, completeCallback) {
                 xhr.open('POST', options.url, true);
-                xhr.onload = function() {
+                xhr.onload = function () {
                     var allResponseHeaders = 'Content-Length: ' + xhr.responseText.length + '\r\nContent-Type: ' + xhr.contentType;
                     var status = {
                         code: 200,
@@ -139,7 +138,7 @@ $.ajaxTransport("json", function(options, origOptions, jqXHR) {
                 }
                 xhr.send(fd);
             },
-            abort: function() {
+            abort: function () {
                 xhr.abort();
             }
         };
@@ -165,14 +164,14 @@ $.ajaxTransport("json", function(options, origOptions, jqXHR) {
  * 	$.ajaxJson({status: 'login/ok/other', msg: 'successfully!', callback: '', context: null, data:{}})
  * 	$.ajaxJson({status: 'login/ok/other', msg: 'successfully!',  redirect: 'reload/referer/back/url', delay: 3, script: '', , callback: '', context: null, data:{}})
  */
-$.fn.ajaxJson = function(json) {
+$.fn.ajaxJson = function (json) {
     // status is requested
     if (!json || !json.status) {
         $.status('Invalid Request');
         return false;
     }
 
-    var redirect = function() {
+    var redirect = function () {
          if (!json.redirect) {
              return false;
          }
@@ -235,13 +234,13 @@ $.fn.ajaxJson = function(json) {
 /**
  * this function is auto execute when ajax request error
  */
-$.fn.ajaxError = function() {
+$.fn.ajaxError = function () {
 };
 
 /**
  * this function is auto execute when ajax request complate
  */
-$.fn.ajaxComplete = function() {
+$.fn.ajaxComplete = function () {
 };
 
 /**
@@ -252,10 +251,10 @@ $.fn.ajaxComplete = function() {
  *	$.ajaxAuto({
  *		url: "",
  *		"success": funciton(){},
- *		"error": function(){}
+ *		"error": function (){}
  * 	});
  */
-$.fn.ajaxAuto = function(settings) {
+$.fn.ajaxAuto = function (settings) {
     if ("function" == typeof settings) {
         settings  = {
             success: settings
@@ -275,9 +274,9 @@ $.fn.ajaxAuto = function(settings) {
  * ajaxLink is used for the link which has class ='ajax-link' will auto used ajax submit
  *
  * @example:
- * 	$(".ajax-link").on("click", function(){$(this).ajaxLink(); return false;});
+ * 	$(".ajax-link").on("click", function (){$(this).ajaxLink(); return false;});
  */
-$.fn.ajaxLink = function(settings) {
+$.fn.ajaxLink = function (settings) {
     if ("function" == typeof settings) {
         settings  = {
             success: settings
@@ -285,27 +284,27 @@ $.fn.ajaxLink = function(settings) {
     }
     settings = $.extend({}, $.ajaxSettings, settings);
 
-    this.each(function() {
+    this.each(function () {
 
         var url = $(this).attr('href');
         if (url === undefined) {
             url = $(this).data('href');
         }
         var context = $(this);
-        var disableContext = function(){context.attr('disabled', 'disabled').addClass('processing');};
-        var enableContext = function(){context.removeAttr('disabled', 'disabled').removeClass('processing');};
+        var disableContext = function (){context.attr('disabled', 'disabled').addClass('processing');};
+        var enableContext = function (){context.removeAttr('disabled', 'disabled').removeClass('processing');};
         if(url !== undefined) {
             settings.url = url;
         }
         settings.dataType = 'json';
-        settings.beforeSend = function() {
+        settings.beforeSend = function () {
             disableContext();
             settings.before && settings.before();
         };
         var $$ = $(this);
 
         var success = settings.success;
-        settings.success = function(json) {
+        settings.success = function (json) {
             $$.ajaxJson(json);
             success && success(json);
             if ((json.redirect === undefined) || !json.redirect) {
@@ -314,7 +313,7 @@ $.fn.ajaxLink = function(settings) {
         };
 
         $.ajax(settings)
-        .always(function(json) {
+        .always(function (json) {
             settings.complete && settings.complete();
             if ((json.redirect === undefined) || !json.redirect) {
                 enableContext();
@@ -328,9 +327,9 @@ $.fn.ajaxLink = function(settings) {
  * the form which add class ="ajax-from" will auto used ajax submit
  *
  * @example:
- *  $(".ajax-form").on("submit", function(){$(this).ajaxForm()};
+ *  $(".ajax-form").on("submit", function (){$(this).ajaxForm()};
  */
-$.fn.ajaxForm = function(settings) {
+$.fn.ajaxForm = function (settings) {
     if ("function" == typeof settings) {
         settings  = {
             success: settings
@@ -340,8 +339,8 @@ $.fn.ajaxForm = function(settings) {
 
     var context = $(this);
     var formBtn = context.find('button[type=submit]').eq(0);
-    var disableBtn = function() {formBtn.attr('disabled', 'disabled').addClass('processing');};
-    var enableBtn = function() {formBtn.removeAttr('disabled').removeClass('processing');};
+    var disableBtn = function () {formBtn.attr('disabled', 'disabled').addClass('processing');};
+    var enableBtn = function () {formBtn.removeAttr('disabled').removeClass('processing');};
     if (settings.context) {
         context = settings.context;
     }
@@ -351,23 +350,23 @@ $.fn.ajaxForm = function(settings) {
         url: $(this).attr('action'),
         data: $(this).serialize(),
         dataType: settings.dataType ? settings.dataType : 'json',
-        beforeSend: function(){
+        beforeSend: function (){
             disableBtn();
             settings.before && settings.before();
         }
     })
-    .done(function(json) {
+    .done(function (json) {
         context.ajaxJson(json);
         settings.success && settings.success(json);
         if ((json.redirect === undefined) || !json.redirect) {
             enableBtn();
         }
     })
-    .fail(function() {
+    .fail(function () {
         context.ajaxError();
         settings.error && settings.error();
     })
-    .always(function(json) {
+    .always(function (json) {
         context.ajaxComplete();
         settings.complete && settings.complete();
         if ((json.redirect === undefined) || !json.redirect) {
@@ -381,9 +380,9 @@ $.fn.ajaxForm = function(settings) {
  * the form which add class ="ajax-from" and attr entype will auto used ajax submit
  *
  * @example:
- *          $(".ajax-upload").on("submit", function(){$(this).ajaxUpload()};;
+ *          $(".ajax-upload").on("submit", function (){$(this).ajaxUpload()};;
  */
-$.fn.ajaxUpload = function(settings) {
+$.fn.ajaxUpload = function (settings) {
     if ("function" == typeof settings) {
         settings  = {
             success: settings
@@ -393,8 +392,8 @@ $.fn.ajaxUpload = function(settings) {
 
     var context = this;
     var formBtn = $(context).find('button[type=submit]').eq(0);
-    var disableBtn = function() {formBtn.attr('disabled', 'disabled');};
-    var enableBtn = function() {formBtn.removeAttr('disabled');};
+    var disableBtn = function () {formBtn.attr('disabled', 'disabled');};
+    var enableBtn = function () {formBtn.removeAttr('disabled');};
     if (settings.context) {
         context = settings.context;
     }
@@ -405,12 +404,12 @@ $.fn.ajaxUpload = function(settings) {
         data: this.serializeArray(),
         files: $(":file", this),
         dataType: 'json',
-        beforeSend: function() {
+        beforeSend: function () {
             disableBtn();
             settings.before && settings.before();
         }
     })
-    .done(function(json) {
+    .done(function (json) {
         if (typeof json == 'string') {
             json = eval("(" + json + ")");
         }
@@ -420,11 +419,11 @@ $.fn.ajaxUpload = function(settings) {
             enableBtn();
         }
     })
-    .fail(function() {
+    .fail(function () {
         context.ajaxError();
         settings.error && settings.error();
     })
-    .always(function() {
+    .always(function () {
         context.ajaxComplete();
         settings.complete && settings.complete();
     });

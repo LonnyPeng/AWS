@@ -49,6 +49,19 @@ if (! function_exists('isJson')) {
     }
 }
 
+if (! function_exists('isMail')) {
+    /**
+     * Is mail
+     *
+     * @param string $mail
+     * @return boolean
+     */
+    function isMail($mail = '')
+    {
+        return preg_match("/^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$/i", $mail);
+    }
+}
+
 if (! function_exists('openJson')) {
     /**
      * If string is json, to array
