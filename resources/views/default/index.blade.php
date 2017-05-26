@@ -1,6 +1,6 @@
 @extends('layout.index')
 
-@section('title', trans('Laravel'))
+@section('title', 'Laravel')
 
 @section('style')
 <style type="text/css">
