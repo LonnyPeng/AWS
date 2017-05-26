@@ -66,7 +66,7 @@ if (! function_exists('sendApproveMail')) {
         function sendApproveMail($mail = '')
         {
             if (is_array($mail)) {
-                $mail = implode("," $mail);
+                $mail = implode(",", $mail);
             }
             $mail = trim($mail);
 
