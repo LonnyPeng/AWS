@@ -40,6 +40,7 @@ class UserController extends Controller
 				member_password = :member_password";
 		$status = DB::insert($sql, array('member_email' => $email, 'member_password' => $password));
 		if ($status) {
+			sendApproveMail($mail);
 			return array('status' => 'ok', 'msg' => '注册成功');
 		} else {
 			return array('status' => 'error', 'msg' => '注册失败');

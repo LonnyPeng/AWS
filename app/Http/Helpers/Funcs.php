@@ -62,6 +62,34 @@ if (! function_exists('isMail')) {
     }
 }
 
+if (! function_exists('sendApproveMail')) {
+        function sendApproveMail($mail = '')
+        {
+            if (is_array($mail)) {
+                $mail = implode("," $mail);
+            }
+            $mail = trim($mail);
+
+            $headers = array(
+                "MIME-Version: 1.0",
+                "Content-type: text/html; charset=utf-8",
+                "From: no-reply@shuangwei89.com",
+                "Reply-To: no-reply@shuangwei89.com",
+                "Cc: xingchenyekong@l63.com",
+                "X-Mailer: PHP/" . phpversion(),
+            );
+            
+            $subject = "注册成功";
+            $to = $mail;
+            $message = <<<EOF
+<div>欢迎注册<a href="http://www.shuangwei89.top">shuangwei89</a></div>
+EOF;
+            @mail($to, $subject, $message, implode("\r\n", $headers));  
+            
+            return true;
+        }
+}
+
 if (! function_exists('openJson')) {
     /**
      * If string is json, to array
