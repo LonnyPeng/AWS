@@ -22,3 +22,8 @@ Route::get('/login', function () {
 	return view('user.login');
 });
 Route::post('/do/login', 'UserController@login');
+
+Route::get('/web', function () {
+	return view('web.index');
+});
+Route::post('/do/web', 'WebController@index');
