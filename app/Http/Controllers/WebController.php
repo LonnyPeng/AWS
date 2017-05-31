@@ -52,7 +52,8 @@ class WebController extends Controller
                 }
                 if (file_exists($file . $updateFileName . ".jpg")) {
                 	$sql = "INSERT INTO t_save_web 
-                			SET web_name = :web_name, 
+                			SET web_name = :web_name,
+                            web_ip = '127.0.0.1', 
                 			web_file = :web_file";
                 	DB::insert($sql, array('web_name' => $url, 'web_file' => $updateFileName));
                     break;
