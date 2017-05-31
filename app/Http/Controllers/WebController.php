@@ -44,7 +44,7 @@ class WebController extends Controller
             );
 
             exec(implode(" ", $strArr), $log, $status);
-            print_r(implode(" ", $strArr));die;
+            //print_r(implode(" ", $strArr));die;
 
             for ($i=0;;$i++) {
                 if (time() - $startTime > $this->maxTime) {
