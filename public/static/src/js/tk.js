@@ -2,7 +2,7 @@ var system = require('system');
 
 var a = system.args[1], TKK = system.args[2];
 
-console.log( tk(a, TKK));
+console.log(tk(a, TKK));
 
 phantom.exit();
 
