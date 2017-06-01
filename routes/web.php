@@ -27,3 +27,8 @@ Route::get('/web', function () {
 	return view('web.index');
 });
 Route::post('/do/web', 'WebController@index');
+
+Route::get('/translation', function () {
+	return view('web.translation');
+});
+Route::post('/do/web', 'WebController@translation');

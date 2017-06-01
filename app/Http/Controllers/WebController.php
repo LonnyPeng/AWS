@@ -70,3 +70,106 @@ class WebController extends Controller
         ));
     }
 }
+
+    public function translation()
+    {
+        if (!isAjax()) {
+            return false;
+        }
+
+        $key = trim(Input::get('key'));
+
+        $strArr = array(
+            "phantomjs",
+            WWW_ROOT . "static/dist/js/tk.js",
+            $key,
+            $this->TKK(),
+            "2>&1",
+        );
+
+        exec(implode(" ", $strArr), $log, $status);
+
+        $result = $this->translationApi(array('tl' => 'en', 'text' => $key, 'tk' => reset($log)));
+
+        return json_encode(array(
+            'status' => 'ok',
+            'msg' => "",
+            'data' => $result,
+        ));
+    }
+
+    /**
+     * Google translation api
+     *
+     * @param array $tranInfo = array('tl' => 'zh-CN', 'text' => "Hello World", 'TKK' => '')
+     * @return string
+     */
+    public function translationApi($tranInfo = array('tl' => 'en', 'text' => 'Hello World', 'tk' => ''), $status = false)
+    {
+        $langArr = array(
+            "sq", "ar", "am", "az", "ga", "et", "eu", "be", "bg", "is", "pl", "bs", "fa", "af", "da", "de", "ru", "fr", "tl", "fi", 
+            "fy", "km", "ka", "gu", "kk", "ht", "ko", "ha", "nl", "ky", "gl", "ca", "cs", "kn", "co", "hr", "ku", "la", "lv", "lo", 
+            "lt", "lb", "ro", "mg", "mt", "mr", "ml", "ms", "mk", "mi", "mn", "bn", "my", "hmn", "xh", "zu", "ne", "no", "pa", "pt", 
+            "ps", "ny", "ja", "sv", "sm", "sr", "st", "si", "eo", "sk", "sl", "sw", "gd", "ceb", "so", "tg", "te", "ta", "th", "tr", 
+            "cy", "ur", "uk", "uz", "es", "iw", "el", "haw", "sd", "hu", "sn", "hy", "ig", "it", "yi", "hi", "su", "id", "jw", "en", 
+            "yo", "vi", "zh-TW", "zh-CN", 
+        );
+        if (!isset($tranInfo['tl']) || !in_array($tranInfo['tl'], $langArr)) {
+            $tranInfo['tl'] = 'en';
+        }
+
+        if (!isset($tranInfo['text'])) {
+            return false;
+        }
+
+        $urlInfo = array(
+            'url' => "https://translate.google.cn/translate_a/single",
+            'params' => array(
+                'client' => "t",
+                'sl' => "auto",
+                'tl' => $tranInfo['tl'],
+                'dt' => array(
+                    "at", "bd", "ex", "ld", "md",
+                    "qca", "rw", "rm", "ss", "t",
+                ),
+                'tk' => $tranInfo['tk'],
+                'q' => urlencode($tranInfo['text']),
+            ),
+        );
+        
+        $apiSstatus = curl($urlInfo, '', true);
+        if ($apiSstatus['http_code'] != 200) {
+            return "HTTP ERROR " . $apiSstatus['http_code'];
+        }
+
+        $html = curl($urlInfo);
+        $data = json_decode($html);
+
+        if ($status) {
+            return $data;
+        } else {
+            $str = "";
+            foreach ($data[0] as $row) {
+                $str .= $row[0];
+            }
+
+            return $str;
+        }
+    }
+
+    /**
+     * Get TKK
+     *
+     * @return string
+     */
+    private function TKK() 
+    {
+        $preg = array(
+            'tkk' => "#TKK\=eval\('\(\(function\(\)\{var\s+a\\\\x3d(-?\d+);var\s+b\\\\x3d(-?\d+);return\s+(\d+)\+#isU",
+        );
+        $html = curl(array('url' => "http://translate.google.cn"));
+        preg_match($preg['tkk'], $html, $arr);
+
+        return $arr[3] . '.' . (floatval($arr[1]) + floatval($arr[2]));
+    }
+}

@@ -19,3 +19,7 @@ require __DIR__.'/../vendor/autoload.php';
 if (file_exists(__DIR__.'/../app/Http/Helpers/Funcs.php')) {
 	require __DIR__.'/../app/Http/Helpers/Funcs.php';
 }
+
+if (file_exists(__DIR__.'/init.inc.php')) {
+	require __DIR__.'/init.inc.php';
+}

@@ -1,7 +1,4 @@
 <?php
-session_start();
-
-define("WWW_ROOT", __DIR__ . "/");
 
 /**
  * Laravel - A PHP Framework For Web Artisans
