@@ -1,3 +1,3 @@
 <?php
 
-define("WWW_ROOT", __DIR__ . "/");
+define("WWW_ROOT", __DIR__ . "/../public/");
