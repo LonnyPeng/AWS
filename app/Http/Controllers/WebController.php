@@ -69,7 +69,6 @@ class WebController extends Controller
         	'data' => $src,
         ));
     }
-}
 
     public function translation()
     {
