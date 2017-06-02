@@ -26,7 +26,7 @@
 		</div>
 	</form>
 </div>
-<div class="js-box" style="color: #0f0;"></div>
+<div class="js-box" style="color: #0f0; margin: 10px 0; text-align: center; font-size: 16px; font-weight: bold;"></div>
 
 <script type="text/javascript">
 	$('input[name="key"]').change(function () {
