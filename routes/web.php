@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Models\MemberModel;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -29,6 +31,11 @@ Route::get('/web', function () {
 Route::post('/do/web', 'WebController@index');
 
 Route::get('/translation', function () {
-	return view('web.translation');
+	$model = new MemberModel();
+	$files = "lan_name, lan_key";
+	$where = "lan_status = 1";
+	$orderBy = "CONVERT(lan_name USING GBK) ASC";
+	$lanList = $model->getTable("t_language", $files, array("setWhere" => $where, "setOrderBy" => $orderBy));
+	return view('web.translation', array('lanList' => $lanList));
 });
 Route::post('/do/translation', 'WebController@translation');

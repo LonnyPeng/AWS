@@ -78,9 +78,9 @@ class WebController extends Controller
 
         $key = trim(Input::get('key'));
         $tk = trim(Input::get('tk'));
+        $tl = trim(Input::get('tl'));
 
-
-        $result = $this->translationApi(array('tl' => 'en', 'text' => $key, 'tk' => $tk));
+        $result = $this->translationApi(array('tl' => $tl, 'text' => $key, 'tk' => $tk));
 
         return json_encode(array(
             'status' => 'ok',

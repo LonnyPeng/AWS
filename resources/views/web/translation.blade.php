@@ -13,6 +13,13 @@
 			<input type="text" name="key" value="" />
 		</div>
 		<div class="row">
+			<select name="tl">
+				@foreach($lanList as $row)
+					<option value="{{ $row['lan_key'] }}">{{ $row['lan_name'] }}</option>
+				@endforeach
+			</select>
+		</div>
+		<div class="row">
 			<input type="hidden" name="tk" value="" />
 			<input type="hidden" name="_token" value="{{ csrf_token() }}" />
 			<button class="button" type="submit">Search</button>
