@@ -1,11 +1,3 @@
-var system = require('system');
-
-var a = system.args[1], TKK = system.args[2];
-
-console.log(tk(a, TKK));
-
-phantom.exit();
-
 /*
  * 服务于 Google 翻译 tk 值
  */

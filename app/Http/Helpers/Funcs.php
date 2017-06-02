@@ -1144,3 +1144,21 @@ if (! function_exists('dateDiff')) {
         return floor(($start - $end) / 86400);
     }
 }
+
+if (! function_exists('TKK')) {
+    /**
+     * Get TKK
+     *
+     * @return string
+     */
+    function TKK() 
+    {
+        $preg = array(
+            'tkk' => "#TKK\=eval\('\(\(function\(\)\{var\s+a\\\\x3d(-?\d+);var\s+b\\\\x3d(-?\d+);return\s+(\d+)\+#isU",
+        );
+        $html = curl(array('url' => "http://translate.google.cn"));
+        preg_match($preg['tkk'], $html, $arr);
+
+        return $arr[3] . '.' . (floatval($arr[1]) + floatval($arr[2]));
+    }
+}

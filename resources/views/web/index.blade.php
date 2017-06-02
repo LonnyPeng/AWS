@@ -2,9 +2,9 @@
 
 @section('title', '网页')
 
-@yield('styles')
-<link rel="stylesheet" type="text/css" href="{{  URL::asset('static/dist/css/web.css'  )}}" />
-@show
+@section('style')
+<link rel="stylesheet" type="text/css" href="{{ URL::asset('static/dist/css/web.css' )}}" />
+@stop
 
 @section('content')
 <div id="search">

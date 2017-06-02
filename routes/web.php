@@ -31,4 +31,4 @@ Route::post('/do/web', 'WebController@index');
 Route::get('/translation', function () {
 	return view('web.translation');
 });
-Route::post('/do/web', 'WebController@translation');
+Route::post('/do/translation', 'WebController@translation');

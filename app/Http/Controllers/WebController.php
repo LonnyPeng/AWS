@@ -72,23 +72,15 @@ class WebController extends Controller
 
     public function translation()
     {
-        if (!isAjax()) {
+        if (!isPost()) {
             return false;
         }
 
         $key = trim(Input::get('key'));
+        $tk = trim(Input::get('tk'));
 
-        $strArr = array(
-            "phantomjs",
-            WWW_ROOT . "static/dist/js/tk.js",
-            $key,
-            $this->TKK(),
-            "2>&1",
-        );
 
-        exec(implode(" ", $strArr), $log, $status);
-
-        $result = $this->translationApi(array('tl' => 'en', 'text' => $key, 'tk' => reset($log)));
+        $result = $this->translationApi(array('tl' => 'en', 'text' => $key, 'tk' => $tk));
 
         return json_encode(array(
             'status' => 'ok',
@@ -154,21 +146,5 @@ class WebController extends Controller
 
             return $str;
         }
-    }
-
-    /**
-     * Get TKK
-     *
-     * @return string
-     */
-    private function TKK() 
-    {
-        $preg = array(
-            'tkk' => "#TKK\=eval\('\(\(function\(\)\{var\s+a\\\\x3d(-?\d+);var\s+b\\\\x3d(-?\d+);return\s+(\d+)\+#isU",
-        );
-        $html = curl(array('url' => "http://translate.google.cn"));
-        preg_match($preg['tkk'], $html, $arr);
-
-        return $arr[3] . '.' . (floatval($arr[1]) + floatval($arr[2]));
     }
 }
