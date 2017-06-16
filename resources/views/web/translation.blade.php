@@ -4,6 +4,7 @@
 
 @section('script')
 <script type="text/javascript" src="{{ URL::asset('static/dist/js/tk.js') }}"></script>
+<!-- <script type="text/javascript" src="http://libs.baidu.com/swfobject/2.2/swfobject.js"></script> -->
 @stop
 
 @section('content')
@@ -29,7 +30,28 @@
 	</form>
 </div>
 
-<div class="js-box" style="margin: 10px; padding: 5px; width: 48%; min-height: 22px; color: #000; text-align: left; font-size: 16px; font-weight: bold; border: 2px #007dc6 solid; background-color: #eff;"></div>
+<div class="js-box" style="margin: 10px; padding: 5px; width: 48%; min-height: 22px; color: #000; text-align: left; font-size: 16px; font-weight: bold; border: 2px #007dc6 solid; background-color: #eff;" id="zxxTestArea"></div>
+<span style="display: inline-block; width: 10px; height: 20px; border: 1px solid #f00;">
+    <span id="forLoadSwf"></span>
+</span>
+
+<script type="text/javascript">
+    // var copyCon = document.getElementById("zxxTestArea").innerHTML;
+    // var flashvars = {
+    //     content: encodeURIComponent(copyCon),
+    //     uri: 'http://www.zhangxinxu.com/study/image/flash_copy_btn.png'
+    // };
+    // var params = {
+    //     wmode: "transparent",
+    //     allowScriptAccess: "always"
+    // };
+    // swfobject.embedSWF("http://www.zhangxinxu.com/study/js/clipboard.swf", "forLoadSwf", "52", "25", "9.0.0", null, flashvars, params);
+
+    // function copySuccess(){
+    //     //flash回调
+    //     alert("复制成功！");
+    // }
+</script>
 
 <script type="text/javascript">
 	var key = $('textarea[name="key"]').val();
