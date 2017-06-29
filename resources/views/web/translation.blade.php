@@ -7,7 +7,7 @@
 @stop
 
 @section('script')
-<!-- <script type="text/javascript" src="http://libs.baidu.com/swfobject/2.2/swfobject.js"></script> -->
+<script type="text/javascript" src="{{ URL::asset('static/dist/js/swfobject.js' )}}"></script>
 @stop
 
 @section('content')
@@ -29,35 +29,25 @@
 	<div id="box">
 		<div id="left">
 			<textarea name="key" value="" ></textarea>
+			<span class="delete">
+				<i class="fa fa-remove fa-2x"></i>
+			</span>
 		</div>
-		<div class="js-box" id="right"></div>
+		<div id="right">
+			<textarea class="js-box" readonly="readonly"></textarea>
+			<div class="none" id="zxxTestArea"></div>
+			<span id="forLoadSwf"></span>
+		</div>
 	</div>
 </form>
 
-<!-- <div class="js-box" style="margin: 10px; padding: 5px; width: 48%; min-height: 22px; color: #000; text-align: left; font-size: 16px; font-weight: bold; border: 2px #007dc6 solid; background-color: #eff;" id="zxxTestArea"></div>
-<span style="display: inline-block; width: 10px; height: 20px; border: 1px solid #f00;">
-    <span id="forLoadSwf"></span>
-</span> -->
-
 <script type="text/javascript">
-    // var copyCon = document.getElementById("zxxTestArea").innerHTML;
-    // var flashvars = {
-    //     content: encodeURIComponent(copyCon),
-    //     uri: 'http://www.zhangxinxu.com/study/image/flash_copy_btn.png'
-    // };
-    // var params = {
-    //     wmode: "transparent",
-    //     allowScriptAccess: "always"
-    // };
-    // swfobject.embedSWF("http://www.zhangxinxu.com/study/js/clipboard.swf", "forLoadSwf", "52", "25", "9.0.0", null, flashvars, params);
+	// delete
+	$('.delete').click(function () {
+		$('textarea').val('');
+		$('#zxxTestArea').html('');
+	});
 
-    // function copySuccess(){
-    //     //flash回调
-    //     alert("复制成功！");
-    // }
-</script>
-
-<script type="text/javascript">
 	$('textarea[name="key"]').keydown(function () {
 		$(this).val() && $('form').trigger('submit');
 	});
@@ -69,8 +59,19 @@
 		$$.ajaxAuto({
 			success: function (re) {
 				if (re.status == 'ok') {
-					$('.js-box').html('');
-					$('.js-box').html(re.data);
+					$('.js-box, #zxxTestArea').html('');
+					$('.js-box, #zxxTestArea').html(re.data);
+
+					var copyCon = document.getElementById("zxxTestArea").innerHTML;
+					var flashvars = {
+					    content: encodeURIComponent(copyCon),
+					    uri: window.location.origin + '/static/dist/images/flash_copy_btn.png'
+					};
+					var params = {
+					    wmode: "transparent",
+					    allowScriptAccess: "always"
+					};
+					swfobject.embedSWF(window.location.origin + "/static/dist/audio/clipboard.swf", "forLoadSwf", "52", "25", "9.0.0", null, flashvars, params);
 				}
 			}
 		});
