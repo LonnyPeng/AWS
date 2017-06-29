@@ -1145,6 +1145,95 @@ if (! function_exists('dateDiff')) {
     }
 }
 
+if (! function_exists('zeroFill')) {
+    /**
+     * PHP >>> ( 100 >>> 2 => 25)
+     *
+     * @param int $a
+     * @param int $b
+     * @return int
+     */
+    function zeroFill($a = "", $b = "") 
+    { 
+        $z = hexdec(80000000); 
+        if ($z & $a) { 
+            $a = $a >> 1; 
+            $a &= ~$z; 
+            $a |= 0x40000000; 
+            $a = $a >> ($b - 1); 
+        } else { 
+            $a = $a >> $b; 
+        } 
+        return $a; 
+    }
+}
+
+if (! function_exists('unicodeEncode')) {
+    /**
+     * 汉字 UNICODE编码
+     *
+     * @param string $name
+     * @return int
+     */
+    function unicodeEncode($name = "")  
+    {
+        if (ord($name) > 127) {
+            $name = iconv('UTF-8', 'UCS-2', $name);
+            $str = '';  
+            for($i = 0; $i < strlen($name) - 1; $i += 2) {
+                $c = $name[$i];
+                $c2 = $name[$i + 1];
+                if (ord($c) > 0) {
+                    $str .= str_pad(base_convert(ord($c), 10, 16), 2, 0, STR_PAD_LEFT) . str_pad(base_convert(ord($c2), 10, 16), 2, 0, STR_PAD_LEFT);
+                } else {  
+                    $str .= $c2;  
+                }  
+            }
+
+            $str = hexdec($str);
+        } else {
+            $str = ord($name);
+        }
+
+        return $str;  
+    }
+}
+
+if (! function_exists('b')) {
+    /**
+     * 服务于 Google 翻译 tk 值
+     *
+     * @param int $a
+     * @param string $b
+     * @return int
+     */
+    function b($a = "", $b = "")
+    {
+        for ($d = 0; $d < mb_strlen($b, "UTF-8") - 2; $d += 3) {
+            $c = mb_substr($b, $d + 2, 1);
+            if ("a" <= $c) {
+                $c = ord(mb_substr($c, 0, 1, "UTF-8")) - 87;
+            } else {
+                $c = (int) $c;
+            }
+
+            if ("+" == mb_substr($b, $d + 1, 1, "UTF-8")) {
+                $c = zeroFill($a, $c);
+            } else {
+                $c = $a << $c;
+            }
+
+            if ("+" == mb_substr($b, $d, 1, "UTF-8")) {
+                $a = $a + $c & 4294967295;
+            } else {
+                $a = $a ^ $c;
+            }
+        }
+            
+        return $a;
+    }
+}
+
 if (! function_exists('TKK')) {
     /**
      * Get TKK
@@ -1160,5 +1249,155 @@ if (! function_exists('TKK')) {
         preg_match($preg['tkk'], $html, $arr);
 
         return $arr[3] . '.' . (floatval($arr[1]) + floatval($arr[2]));
+    }
+}
+
+if (! function_exists('tk')) {
+    /**
+     * 获取 Google 翻译 tk 值
+     *
+     * @param string $a (要翻译的内容)
+     * @param string $b
+     * @return string
+     */
+    function tk($a = "", $TKK = "")
+    {
+        $e = explode(".", $TKK);
+        if (isset($e[0])) {
+            $h = floatval($e[0]);
+        } else {
+            $h = 0;
+        }
+        $g = array();
+        $d = 0;
+        for ($f = 0; $f < mb_strlen($a, "UTF-8"); $f++) {
+            $c = unicodeEncode(mb_substr($a, $f, 1, "UTF-8"));
+            if (128 > $c) {
+                $g[$d++] = $c;
+            } else {
+                if (2048 > $c) {
+                    $g[$d++] = $c >> 6 | 192;
+                } else {
+                    if (55296 == ($c & 64512) 
+                        && $f + 1 < mb_strlen($a, "UTF-8") 
+                        && 56320 == (unicodeEncode(mb_substr($a, $f + 1, 1, "UTF-8")) & 64512)) {
+                        $c = 65536 + (($c & 1023) << 10) + (unicodeEncode(mb_substr($a, ++$f, 1, "UTF-8")) & 1023);
+                        $g[$d++] = $c >> 18 | 240;
+                        $g[$d++] = $c >> 12 & 63 | 128;
+                    } else {
+                        $g[$d++] = $c >> 12 | 224;
+                    }
+
+                    $g[$d++] = $c >> 6 & 63 | 128;
+                }
+
+                $g[$d++] = $c & 63 | 128;
+            }
+        }
+
+        $a = $h;
+        for ($d = 0; $d < count($g); $d++) {
+            $a += $g[$d];
+            $a = b($a, "+-a^+6");
+        }
+
+        $a = b($a, "+-3^+b+-f");
+        if (isset($e[1])) {
+            $a = floatval($a) ^ floatval($e[1]);
+        } else {
+            $a ^= 0;
+        }
+        if (0 > $a) {
+            $a = ($a & 2147483647) + 2147483648;
+        }
+        $a = fmod(floatval($a), 1E6);
+
+
+        return (string) $a . "." . ($a ^ $h);
+    }
+}
+
+if (! function_exists('translateGoogleApi')) {
+    /**
+     * Google translation api
+     *
+     * @param array $tranInfo = array('tl' => 'zh-CN', 'text' => "Hello World")
+     * @return string
+     */
+    function translateGoogleApi($tranInfo = array('tl' => 'en', 'text' => ['Hello World']), $status = false)
+    {
+        $langArr = array(
+            "sq", "ar", "am", "az", "ga", "et", "eu", "be", "bg", "is", "pl", "bs", "fa", "af", "da", "de", "ru", "fr", "tl", "fi", 
+            "fy", "km", "ka", "gu", "kk", "ht", "ko", "ha", "nl", "ky", "gl", "ca", "cs", "kn", "co", "hr", "ku", "la", "lv", "lo", 
+            "lt", "lb", "ro", "mg", "mt", "mr", "ml", "ms", "mk", "mi", "mn", "bn", "my", "hmn", "xh", "zu", "ne", "no", "pa", "pt", 
+            "ps", "ny", "ja", "sv", "sm", "sr", "st", "si", "eo", "sk", "sl", "sw", "gd", "ceb", "so", "tg", "te", "ta", "th", "tr", 
+            "cy", "ur", "uk", "uz", "es", "iw", "el", "haw", "sd", "hu", "sn", "hy", "ig", "it", "yi", "hi", "su", "id", "jw", "en", 
+            "yo", "vi", "zh-TW", "zh-CN", 
+        );
+        if (!isset($tranInfo['tl']) || !in_array($tranInfo['tl'], $langArr)) {
+            $tranInfo['tl'] = 'en';
+        }
+
+        if (!isset($tranInfo['text'])) {
+            return false;
+        }
+
+        $text = (array) $tranInfo['text'];
+        $tkk = TKK();
+        $urlInfo = [];
+        foreach ($text as $key => $value) {
+            $tk = tk($value, $tkk);
+
+            $urlInfo[$key] = array(
+                'url' => "https://translate.google.cn/translate_a/single",
+                'params' => array(
+                    'client' => "t",
+                    'sl' => "auto",
+                    'tl' => $tranInfo['tl'],
+                    'dt' => array(
+                        "at", "bd", "ex", "ld", "md",
+                        "qca", "rw", "rm", "ss", "t",
+                    ),
+                    'tk' => $tk,
+                    'q' => urlencode($value),
+                ),
+            );
+        }
+
+        if (count($text) == 1) {
+            $html = curl(reset($urlInfo));
+            $data = json_decode($html);
+        } else {
+            $html = curlMulti($urlInfo);
+            $data = array_map("json_decode", $html);
+        }
+
+        if ($status) {
+            return $data;
+        } else {
+            if (count($text) == 1) {
+                $str = "";
+                if (isset($data[0])) {
+                    foreach ($data[0] as $row) {
+                        $str .= $row[0];
+                    }
+                }
+                
+                return $str;
+            } else {
+                foreach ($data as $key => $row) {
+                    $str = "";
+                    if (isset($row[0])) {
+                        foreach ($row[0] as $r) {
+                            $str .= $r[0];
+                        }
+                    }
+
+                    $data[$key] = $str;
+                }
+
+                return $data;
+            }
+        }
     }
 }

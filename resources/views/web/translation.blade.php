@@ -7,39 +7,37 @@
 @stop
 
 @section('script')
-<script type="text/javascript" src="{{ URL::asset('static/dist/js/tk.js') }}"></script>
 <!-- <script type="text/javascript" src="http://libs.baidu.com/swfobject/2.2/swfobject.js"></script> -->
 @stop
 
 @section('content')
-<div id="search">
-	<form action="{{ URL('do/translation') }}" method="post">
-		<div style="display: inline-block;">
-			<select name="tl" style="border: 1px #007dc6 solid; height: 28px; padding-left: 2px;">
+<form action="{{ URL('do/translation') }}" method="post">
+	<div id="search">
+		<span>
+			<select name="tl">
 				@foreach($lanList as $row)
-					<option value="{{ $row['lan_key'] }}">{{ $row['lan_name'] }}</option>
+					<option value="{{ $row['lan_key'] }}" {{ $row['lan_key'] == 'zh-CN' ? 'selected' : '' }}>{{ $row['lan_name'] }}</option>
 				@endforeach
 			</select>
-		</div>
+		</span>
 
-		<div style="display: inline-block;">
-			<input type="hidden" name="tk" value="" />
+		<span>
 			<input type="hidden" name="_token" value="{{ csrf_token() }}" />
 			<button class="button" type="submit">Search</button>
-		</div>
-	</form>
-</div>
-<div id="box">
-	<div id="left">
-		<textarea name="key" value="" ></textarea>
+		</span>
 	</div>
-	<div id="right"></div>
-</div>
+	<div id="box">
+		<div id="left">
+			<textarea name="key" value="" ></textarea>
+		</div>
+		<div class="js-box" id="right"></div>
+	</div>
+</form>
 
-<div class="js-box" style="margin: 10px; padding: 5px; width: 48%; min-height: 22px; color: #000; text-align: left; font-size: 16px; font-weight: bold; border: 2px #007dc6 solid; background-color: #eff;" id="zxxTestArea"></div>
+<!-- <div class="js-box" style="margin: 10px; padding: 5px; width: 48%; min-height: 22px; color: #000; text-align: left; font-size: 16px; font-weight: bold; border: 2px #007dc6 solid; background-color: #eff;" id="zxxTestArea"></div>
 <span style="display: inline-block; width: 10px; height: 20px; border: 1px solid #f00;">
     <span id="forLoadSwf"></span>
-</span>
+</span> -->
 
 <script type="text/javascript">
     // var copyCon = document.getElementById("zxxTestArea").innerHTML;
@@ -60,22 +58,13 @@
 </script>
 
 <script type="text/javascript">
-	var key = $('textarea[name="key"]').val();
 	$('textarea[name="key"]').keydown(function () {
-		if (this.value != key) {
-			key = this.value;
-			$('input[name="tk"]').val(tk(key, '{{ TKK() }}'));
-
-			$('#search form').trigger('submit');
-		}
-	}); 
-
-	$('textarea[name="key"]').change(function () {
-		$('input[name="tk"]').val(tk($(this).val(), '{{ TKK() }}'));
+		$(this).val() && $('form').trigger('submit');
 	});
 
-	$('#search form').submit(function () {
+	$('form').submit(function () {
 		var $$ = $(this);
+
 		this.key.value &&
 		$$.ajaxAuto({
 			success: function (re) {
